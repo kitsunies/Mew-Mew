@@ -47,6 +47,10 @@ function events.messageCreate(client, msg)
     if modules.manual then
         modules.manual(msg)
     end
+    
+    if modules.code then
+        modules.code(msg) 
+    end
 
 end
 
