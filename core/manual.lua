@@ -1,46 +1,46 @@
 local url = 'https://www.lua.org/manual/%s/manual.html'
-local pretag = '<hr><h3><a name="'
+local pretag = '<hr><h3><a name='
 local prefix = loader.constants.settings.prefix
 require('discordia').extensions()
 
 local function sub(sub)
     --> Entity Subs
-    sub = sub:gsub("&.-;", {
+    sub = sub:gsub('&.-;', {
         --> Names
-        ["&nbsp;"] = " ", ["&lt;"] = "<",
-        ["&gt;"] = ">", ["&amp;"] = "&",
-        ["&quot;"] = "\"", ["&apos;"] = "\'",
-        ["&copy;"] = "©", ["&reg;"] = "®",
+        ['&nbsp;'] = ' ', ['&lt;'] = '<',
+        ['&gt;'] = '>', ['&amp;'] = '&',
+        ['&quot;'] = '"', ['&apos;'] = '\'',
+        ['&copy;'] = '©', ['&reg;'] = '®',
         --> Numbers
-        ["&#160"] = " ", ["&#60;"] = "<",
-        ["&#62;"] = ">", ["&#38;"] = "&",
-        ["&#34"] = "\"", ["&#39;"] = "\'",
-        ["&#169"] = "©", ["&#174;"] = "®",
+        ['&#160'] = ' ', ['&#60;'] = '<',
+        ['&#62;'] = '>', ['&#38;'] = '&',
+        ['&#34'] = '"', ['&#39;'] = '\'',
+        ['&#169'] = '©', ['&#174;'] = '®',
         --> Single 
-        ["&middot;"] = '.'
+        ['&middot;'] = '.'
     })
     --> Ordinary Sub
-    sub = sub:gsub("<.->", {
-        ["<i>"] = "*", ["</i>"] = "*",
-        ["<p>"] = '', ["</p>"] = '',
-        ["<b>"] = "**", ["</b>"] = "**",
-        ["<em>"] = '*', ["</em>"] = '*',
-        ["<br>"] = '\n', ["</a>"] = '',
-        ["<code>"] = '`', ["</code>"] = '`',
-        ["<strong>"] = "**", ["</strong>"] = "**",
-        ["<pre>"] = "```lua", ["</pre>"] = "```\n"
+    sub = sub:gsub('<.->', {
+        ['<i>'] = '*', ['</i>'] = '*',
+        ['<p>'] = '', ['</p>'] = '',
+        ['<b>'] = '**', ['</b>'] = '**',
+        ['<em>'] = '*', ['</em>'] = '*',
+        ['<br>'] = '\n', ['</a>'] = '',
+        ['<code>'] = '`', ['</code>'] = '`',
+        ['<strong>'] = '**', ['</strong>'] = '**',
+        ['<pre>'] = '```lua', ['</pre>'] = '```\n'
     })
     --> Unique Subs
-    sub = sub:gsub('<a href=".-">', '')
-    sub = sub:gsub("\n\n+", "=\n\n=")
-    sub = sub:gsub("(%S)\n(%S)", '%1 %2')
+    sub = sub:gsub('<a href='.-'>', '')
+    sub = sub:gsub('\n\n+', '=\n\n=')
+    sub = sub:gsub('(%S)\n(%S)', '%1 %2')
     return sub
 end
 
 return function(msg)
 
-    if not loader.constants.manual["5.4"] then msg:reply("Lua manuals are loading...") return end
-	if msg.content:sub(1, #prefix+3) ~= prefix.."man" then return end
+    if not loader.constants.manual['5.4'] then msg:reply('Lua manuals are loading...') return end
+    if msg.content:sub(1, #prefix+3) ~= prefix..'man' then return end
     if msg.author.id == msg.client.user.id then return end
 
     local query = msg.content:split(' ')[2]
@@ -52,14 +52,15 @@ return function(msg)
         version = msg.content:sub(5, 7)
     end
 
+    if not query then return end
     if not version then return end
 
     local url = url:format(version)
     local data = loader.constants.manual[version]
     local suc, ret = pcall(function()
         return {
-            sub(data:match(pretag.."[pdf%-]+"..query..[["><code>(.-)</code></a></h3>.-<hr>]])),
-            sub(data:match(pretag.."[pdf%-]+"..query..[["><code>.-</code></a></h3>(.-)<hr>]]))
+            sub(data:match(pretag..'[pdf%-]+'..query..'"><code>(.-)</code></a></h3>.-<hr>')),
+            sub(data:match(pretag..'[pdf%-]+'..query..'"><code>.-</code></a></h3>(.-)<hr>'))
         }
     end)
     local title, body
@@ -70,7 +71,7 @@ return function(msg)
         local count = 0
         for str in data:gmatch(pretag..'(%S-'..query..'%S-)">') do
             for match in data:gmatch('<h3><a name="(%S-'..query..'%S-)">') do
-                local str = ("[`%s`](%s%s%s)"):format(match:gsub('pdf%-', ''), url, '#', match)
+                local str = ('[`%s`](%s%s%s)'):format(match:gsub('pdf%-', ''), url, '#', match)
                 local found = false
                 for _, v in pairs(results) do
                     if v == str then
@@ -85,12 +86,12 @@ return function(msg)
         end
         return msg:reply {
             embed = {
-                title = "Lua "..version.." Manual",
+                title = 'Lua '..version..' Manual',
                 url = url,
-                description = "No results for: `"..query..'`',
+                description = 'No results for: `'..query..'`',
                 fields = {
                     {
-                        name = "Did you mean:", 
+                        name = 'Did you mean:', 
                         value = table.concat(results, ', '),
                         inline = false
                     }
@@ -99,34 +100,34 @@ return function(msg)
             }    
         }
     end
-    local description = ("----\n\n[`%s`](%s#pdf-%s)"):format(title, url, query)
+    local description = ('----\n\n[`%s`](%s#pdf-%s)'):format(title, url, query)
 
 
     local fields = {}
     for paragraph in body:gmatch('\n=(.-)=\n') do
         fields[#fields+1] = {
-            name = "​", -- zero length white space >w<
+            name = '​', -- zero length white space >w<
             value = paragraph,
             inline = false
         }
     end
 
     local results = {
-        ["Library"] = {},
-        ["C API"] = {},
-        ["C Aux"] = {}
+        ['Library'] = {},
+        ['C API'] = {},
+        ['C Aux'] = {}
     }
 
     local switch = {
-        ["pdf-"] = "Library",
-        ["lua_"] = "C API",
-        ["luaL_"] = "C Aux"
+        ['pdf-'] = 'Library',
+        ['lua_'] = 'C API',
+        ['luaL_'] = 'C Aux'
     }
 
     local keyPairs = { 
-        "Library", 
-        "C API", 
-        "C Aux" 
+        'Library', 
+        'C API', 
+        'C Aux' 
     }
 
     for lib, post in data:gmatch(pretag..'(%S-)'..query..'(%S-)">') do
@@ -140,10 +141,10 @@ return function(msg)
         local fol = switch[sub]
         pre = pre or ''
         post = post or ''
-        sub = sub == "pdf-" and "pdf%-" or sub
+        sub = sub == 'pdf-' and 'pdf%-' or sub
         for match in data:gmatch('"('..sub..pre..query..post..')">') do
             if match:gsub('pdf%-', '') ~= query then
-                match = ("[`%s`](%s%s%s)"):format(match:gsub('pdf%-', ''), url, '#', match)
+                match = ('[`%s`](%s%s%s)'):format(match:gsub('pdf%-', ''), url, '#', match)
                 results[fol][#results[fol]+1] = match ~= query and match
             end
         end
@@ -153,8 +154,8 @@ return function(msg)
         local val = results[k]
         if #val > 0 then
             fields[#fields+1] = {
-                name = "Additional "..k.." Results",
-                value = table.concat(val, ", "),
+                name = 'Additional '..k..' Results',
+                value = table.concat(val, ', '),
                 inline = false
             }
         end
@@ -162,7 +163,7 @@ return function(msg)
 
     msg:reply {
         embed = {
-            title = "Lua "..version.." Manual",
+            title = 'Lua '..version..' Manual',
             url = url,
             description = description,
             fields = fields,
