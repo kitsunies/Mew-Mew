@@ -39,6 +39,10 @@ function events.messageCreate(client, msg)
     if not msg.guild then
         return client.owner:sendf('%s said: %s', msg.author.mentionString, msg.content)
     end
+    
+    if modules.acronym then
+        modules.acronym(msg) 
+    end
 
     if modules.manual then
         modules.manual(msg)
