@@ -48,6 +48,10 @@ function events.messageCreate(client, msg)
         modules.manual(msg)
     end
     
+    if modules.eval then
+        modules.eval(msg) 
+    end
+    
     if modules.code then
         modules.code(msg) 
     end
