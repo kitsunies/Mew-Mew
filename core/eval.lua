@@ -26,7 +26,7 @@ local sandbox = setmetatable({
 
 return function(msg)
 
-    local arg = msg.content:match(prefix..'code%s+(.+)')
+    local arg = msg.content:match(prefix..'eval%s+(.+)')
   
     if not arg then return end
 
@@ -46,8 +46,6 @@ return function(msg)
     
     local success, runtimeError = pcall(fn)
     if not success then return msg:reply{content = runtimeError, code = 'lua'} end
-    
-    msg:addReaction("✅")
     
     if #lines > 0 then
         return msg:reply{content = table.concat(lines, '\n'), code = 'lua'}
