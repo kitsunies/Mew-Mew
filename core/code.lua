@@ -36,8 +36,8 @@ return function(msg)
     env.print = function(...) table.insert(lines, printLine(...)) end
     env.p = function(...) table.insert(lines, prettyLine(...)) end
     
-    local success, runtimeError = pcall(sandbox.run, arg, {env = env})
-    local cline = runtimeError:gsub('^.-%s', '') or table.concat(lines, '\n')
+    local success, error = pcall(sandbox.run, arg, {env = env})
+    local cline = error and error:gsub('^.-%s', '') or table.concat(lines, '\n')
     local output = success and 'success' or 'error'
 
     return msg:reply{
