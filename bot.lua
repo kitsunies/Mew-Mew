@@ -12,4 +12,4 @@ for k, v in pairs(loader.load 'events') do
 	end)
 end
 
-client:run('Bot '..process.env.TOKEN)
+client:run('Bot TOKEN')
