@@ -1,26 +1,13 @@
 local url = 'https://www.lua.org/manual/%s/manual.html'
 local pretag = '<hr><h3><a name="'
 local prefix = loader.constants.settings.prefix
+local htmlEntities = loader.load 'htmlEntities'
 require('discordia').extensions()
 
 local function sub(sub)
-    --> Entity Subs
-    sub = sub:gsub('&.-;', {
-        --> Names
-        ['&nbsp;'] = ' ', ['&lt;'] = '<',
-        ['&gt;'] = '>', ['&amp;'] = '&',
-        ['&quot;'] = '"', ['&apos;'] = '\'',
-        ['&copy;'] = '©', ['&reg;'] = '®',
-        --> Numbers
-        ['&#160'] = ' ', ['&#60;'] = '<',
-        ['&#62;'] = '>', ['&#38;'] = '&',
-        ['&#34'] = '"', ['&#39;'] = '\'',
-        ['&#169'] = '©', ['&#174;'] = '®',
-        --> Single 
-        ['&middot;'] = '.'
-    })
-    --> Ordinary Sub
+    sub = htmlEntities.decode(sub)
     sub = sub:gsub('<.->', {
+        ['<a href=".-">'] = ''
         ['<i>'] = '*', ['</i>'] = '*',
         ['<p>'] = '', ['</p>'] = '',
         ['<b>'] = '**', ['</b>'] = '**',
@@ -29,11 +16,7 @@ local function sub(sub)
         ['<code>'] = '`', ['</code>'] = '`',
         ['<strong>'] = '**', ['</strong>'] = '**',
         ['<pre>'] = '```lua', ['</pre>'] = '```\n'
-    })
-    --> Unique Subs
-    sub = sub:gsub('<a href=".-">', '')
-    sub = sub:gsub('\n\n+', '=\n\n=')
-    sub = sub:gsub('(%S)\n(%S)', '%1 %2')
+    }):gsub('\n\n+', '=\n\n='):gsub('(%S)\n(%S)', '%1 %2')
     return sub
 end
 
@@ -134,12 +117,10 @@ return function(msg)
 
     end
 
-    local description = ('----\n\n[`%s`](%s#pdf-%s)'):format(title, url, query)
-
     local fields = {}
     for paragraph in body:gmatch('\n=(.-)=\n') do
         fields[#fields+1] = {
-            name = '​', -- zero length space
+            name = '​', --> Zero width space
             value = paragraph,
             inline = false
         }
@@ -189,7 +170,7 @@ return function(msg)
         embed = {
             title = 'Lua '..version..' Manual',
             url = url,
-            description = description,
+            description = ('----\n\n[`%s`](%s#pdf-%s)'):format(title, url, query),
             fields = fields,
             color = 0x00007c
         }
