@@ -90,8 +90,9 @@ return function(msg)
 
         for str in data:gmatch(pretag..'(%S-'..query..'%S-)">') do
             for match in data:gmatch('<h3><a name="(%S-'..query..'%S-)">') do
-                local str = ('[`%s`](%s%s%s)'):format(match:gsub('pdf%-', ''), url, '#', match)
-                if match:gsub('pdf%-', '') ~= query then
+                local cmatch = match:gsub('pdf%-', '')
+                local str = ('[`%s`](%s%s%s)'):format(cmatch, url, '#', match)
+                if cmatch:find(query) and cmatch ~= query then
                     for k in pairs(switch) do
                         if str:find(k) then
                             temps[switch[k]][#temps[switch[k]]+1] = str
