@@ -7,7 +7,7 @@ local pathJoin = pathjoin.pathJoin
 local readFileSync = fs.readFileSync
 local scandirSync = fs.scandirSync
 
-local core = './core'
+local core = './modules'
 local consts = './constants'
 
 local loader = {modules = {}, constants = {}}

@@ -47,13 +47,17 @@ function events.messageCreate(client, msg)
     if modules.manual then
         modules.manual(msg)
     end
+
+    if modules.code then
+        modules.code(msg) 
+    end
     
     if modules.eval then
         modules.eval(msg) 
     end
-    
-    if modules.code then
-        modules.code(msg) 
+
+    if modules.loader then
+        modules.loader(msg)
     end
 
 end
