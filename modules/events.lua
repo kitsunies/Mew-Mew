@@ -1,21 +1,18 @@
 local discordia = require('discordia')
-local modules = loader.modules
-local prefix = loader.constants.settings.prefix
+local fs = require('fs')
+local prefix = require('/constants/settings').prefix
 
 discordia.extensions()
 local clock = discordia.Clock()
 
 local events = {}
 
---|| Ready
-
 function events.ready(client)
-    -- print('Ready: ' .. client.user.tag)
 
     local userPresence = {
-        name = #client.guilds .. " guilds | " .. prefix .. "help",
-        type = "default",
-        status = "online"
+        name = #client.guilds..' guilds | '..prefix..'help',
+        status = 'online',
+        type = 3
     }
 
     client:setGame(userPresence)
@@ -28,8 +25,14 @@ function events.ready(client)
 
 end
 
+local modules = {}
 
---|| Message
+for _, v in pairs(fs.readdirSync('./modules')) do
+    local name = v:match('(.*)%.lua$')
+    if name then
+        modules[name] = require('./'..name)
+    end
+end
 
 function events.messageCreate(client, msg)
 
@@ -37,27 +40,13 @@ function events.messageCreate(client, msg)
     if msg.author == client.user then return end
 
     if not msg.guild then
-        return client.owner:sendf('%s said: %s', msg.author.mentionString, msg.content)
-    end
-    
-    if modules.acronym then
-        modules.acronym(msg) 
+        client.owner:sendf('%s said: %s', msg.author.mentionString, msg.content)
     end
 
-    if modules.manual then
-        modules.manual(msg)
-    end
-
-    if modules.code then
-        modules.code(msg) 
-    end
-    
-    if modules.eval then
-        modules.eval(msg) 
-    end
-
-    if modules.loader then
-        modules.loader(msg)
+    for k, v in pairs(modules) do
+        if type(v) == 'function' then
+            v(msg)
+        end
     end
 
 end

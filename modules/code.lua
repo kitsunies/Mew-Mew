@@ -1,7 +1,7 @@
-local sandbox = loader.load('sandbox')
+local sandbox = require('/util/sandbox')
 local pp = require("pretty-print")
 
-local prefix = loader.constants.settings.prefix 
+local prefix = require('/constants/settings').prefix
 
 local function printLine(...)
     local ret = {}

@@ -1,13 +1,14 @@
 local url = 'https://www.lua.org/manual/%s/manual.html'
 local pretag = '<hr><h3><a name="'
-local prefix = loader.constants.settings.prefix
-local htmlEntities = loader.load 'htmlEntities'
+local prefix = require('/constants/settings').prefix
+local manuals = require('../constants/manuals')
+local htmlEntities = require('/util/htmlEntities')
 require('discordia').extensions()
 
 local function sub(sub)
     sub = htmlEntities.decode(sub)
     sub = sub:gsub('<.->', {
-        ['<a href=".-">'] = ''
+        ['<a href=".-">'] = '',
         ['<i>'] = '*', ['</i>'] = '*',
         ['<p>'] = '', ['</p>'] = '',
         ['<b>'] = '**', ['</b>'] = '**',
@@ -25,7 +26,7 @@ return function(msg)
     local version, query = msg.content:match(prefix..'man([0-9]?%.?[0-9]?)%s(.*)')
     if msg.content:sub(1, #prefix+3) ~= prefix..'man' then return end
     if msg.author.id == msg.client.user.id then return end
-    if not loader.constants.manual.state then msg:reply('Lua manuals are loading...') return end
+    if not manuals.state then msg:reply('Lua manuals are loading...') return end
     if not version or not query then return end
 
     if #version == 0 then 
@@ -35,7 +36,7 @@ return function(msg)
     end
 
     local url = url:format(version)
-    local data = loader.constants.manual[version]
+    local data = manuals[version]
     local suc, ret = pcall(function()
         return {
             sub(data:match(pretag..'[pdf%-]+'..query..'"><code>(.-)</code></a></h3>.-<hr>')),

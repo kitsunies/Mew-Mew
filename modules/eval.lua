@@ -1,5 +1,5 @@
 local pp = require("pretty-print")
-local prefix = loader.constants.settings.prefix 
+local prefix = require('/constants/settings').prefix
 
 local function printLine(...)
     local ret = {}
@@ -42,12 +42,18 @@ return function(msg)
     sandbox.p = function(...) table.insert(lines, prettyLine(...)) end
     
     local fn, err = load(arg, msg.client.user.name, 't', sandbox)
-    if not fn then return msg:reply{content = err, code = 'lua'} end
-    
-    local success, runtimeError = pcall(fn)
-    if not success then return msg:reply{content = runtimeError, code = 'lua'} end
-    
-    if #lines > 0 then
-        return msg:reply{content = table.concat(lines, '\n'), code = 'lua'}
+    local output, cline = 'error', err
+    if fn then 
+        local ok, flaw = pcall(fn)
+        cline = flaw and flaw:gsub('^.-%s', '') or table.concat(lines, '\n')
+        output = ok and 'success'
     end
+
+    return msg:reply{
+        embed = {
+            title = 'Evaluation',
+            description = string.format('Output [%s]\n```lua\n%s```', output, cline),
+            color = 0x00007c
+        }
+    }
 end
