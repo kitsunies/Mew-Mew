@@ -25,7 +25,7 @@ local env = {}
 
 return function(msg)
 
-    local arg = msg.content:match(prefix..'code%s+(.+)')
+    local arg = msg.cleanContent:match(prefix..'code%s+(.+)')
   
     if not arg then return end
     
