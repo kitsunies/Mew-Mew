@@ -11,7 +11,7 @@ end
 
 return function(message)
 
-	if message.content:find('LUA') and not hasNotice(message.channel) then
+	if message.cleanContent:find('LUA') and not hasNotice(message.channel) then
 		return message:reply {
 			mention = message.author,
 			content = notice,
