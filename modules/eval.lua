@@ -26,7 +26,7 @@ local sandbox = setmetatable({
 
 return function(msg)
 
-    local arg = msg.content:match(prefix..'eval%s+(.+)')
+    local arg = msg.cleanContent:match(prefix..'eval%s+(.+)')
   
     if not arg then return end
 
