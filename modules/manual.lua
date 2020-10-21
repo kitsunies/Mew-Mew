@@ -23,7 +23,7 @@ end
 
 return function(msg)
 
-    local version, query = msg.content:match(prefix..'man([0-9]?%.?[0-9]?)%s(.*)')
+    local version, query = msg.cleanContent:match(prefix..'man([0-9]?%.?[0-9]?)%s(.*)')
     if msg.content:sub(1, #prefix+3) ~= prefix..'man' then return end
     if msg.author.id == msg.client.user.id then return end
     if not manuals.state then msg:reply('Lua manuals are loading...') return end
