@@ -150,6 +150,9 @@ return function(msg)
 
         for match in data:gmatch('"('..sub..pre..query..post..')">') do
             if match:gsub('pdf%-', '') ~= query then
+                if not results[fol][1] then
+                    results[fol][1] = 1
+                end
                 if results[fol][1] < 10 then
                     match = ('[`%s`](%s%s%s)'):format(match:gsub('pdf%-', ''), url, '#', match)
                     results[fol][1] = results[fol][1] and results[fol][1] + 1 or 1
@@ -161,7 +164,7 @@ return function(msg)
 
     for _, k in ipairs(keyPairs) do
         local val = results[k]
-        val[1] = nil
+        table.remove(val, 1)
         if #val > 0 then
             fields[#fields+1] = {
                 name = 'Additional '..k..' Results',
