@@ -45,7 +45,10 @@ function events.messageCreate(client, msg)
 
     for k, v in pairs(modules) do
         if type(v) == 'function' then
-            v(msg)
+            local suc, err = pcall(v, msg)
+            if not suc then
+                print(err)
+            end
         end
     end
 
