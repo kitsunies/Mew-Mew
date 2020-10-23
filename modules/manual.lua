@@ -7,8 +7,8 @@ require('discordia').extensions()
 
 local function sub(sub)
     sub = htmlEntities.decode(sub)
+    sub = sub:gsub('<a href=".-">', '')
     sub = sub:gsub('<.->', {
-        ['<a href=".-">'] = '',
         ['<i>'] = '*', ['</i>'] = '*',
         ['<p>'] = '', ['</p>'] = '',
         ['<b>'] = '**', ['</b>'] = '**',
