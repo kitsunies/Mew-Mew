@@ -2,7 +2,7 @@ local prefix = require('/constants/settings').prefix
 
 return function(msg)
 
-	if not msg.cleanContent:match(prefix..'help') then return end
+	if not msg.cleanContent:match('^'..prefix..'help') then return end
 
 	msg:reply {
 		embed = {
