@@ -48,6 +48,7 @@ function events.messageCreate(client, msg)
             local suc, err = pcall(v, msg)
             if not suc then
                 print(err)
+                msg:reply {embed = { description = err, color = 0xb8001c }}
             end
         end
     end
