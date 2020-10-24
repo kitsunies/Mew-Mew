@@ -10,4 +10,4 @@ for k, v in pairs(require './modules/events') do
 	end)
 end
 
-client:run('Bot NzM2NDcyNDc1MTcyMzM5NzEy.XxvTcQ.-wNbpxtwaKGIyWupSNSEPaXkhIA')
+client:run('Bot TOKEN')
