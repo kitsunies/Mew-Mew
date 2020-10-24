@@ -1,4 +1,7 @@
--# Compiled Lua sources
+# Main files
+bot.lua
+
+# Compiled Lua sources
 luac.out
 
 # luarocks build files
@@ -39,4 +42,3 @@ luac.out
 *.i*86
 *.x86_64
 *.hex
-.env
