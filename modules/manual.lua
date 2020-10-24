@@ -119,7 +119,7 @@ return function(msg)
     end
 
     local fields = {}
-    for paragraph in body:gmatch('\n=(.-)=\n') do
+    for paragraph in body:gmatch('\n=?(.-)=\n') do
         fields[#fields+1] = {
             name = '​', --> Zero width space
             value = paragraph,
